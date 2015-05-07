@@ -19,7 +19,7 @@ def NPTSPviable(path, c):
 
 def NPTSPviablePath(c):
     visited = [0]
-    notvisited = range(len(c))
+    notvisited = range(1, len(c))
     color = c[1:]
     this = c[0]
     for _ in range(len(c)):
