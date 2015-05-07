@@ -19,21 +19,20 @@ def NPTSPviable(path, c):
 
 def NPTSPviablePath(c):
     visited = [0]
-    notvisited = range(1, len(c))
+    notvisited = range(1,len(c))
     color = c[1:]
     this = c[0]
-    for _ in range(len(c)):
+    for _ in range(1,len(c)):
         if this is 'R':
             i = color.find('B')
             this = 'B'
         else:
             i = color.find('R')
-            this = 'B'           
+            this = 'R'           
         visited.append(notvisited[i])
         notvisited = notvisited[0:i] + notvisited[i+1:]
         color = color[0:i] + color[i+1:]
     return visited
-
 
 def Distance(i1, i2, d):
     return d[i1][i2]
@@ -46,6 +45,9 @@ def TotalDistance(city, d):
     return dist
     
 def reverse(city, n):
+    newcity = []
+    for i in city:
+        newcity.append(i)
     nct = len(city)
     nn = (1+ ((n[1]-n[0]) % nct))/2 # half the length of the segment to be reversed
     # the segment is reversed in the following way n[0]<->n[1], n[0]+1<->n[1]-1, n[0]+2<->n[1]-2,...
@@ -53,7 +55,8 @@ def reverse(city, n):
     for j in range(nn):
         k = (n[0]+j) % nct
         l = (n[1]-j) % nct
-        (city[k],city[l]) = (city[l],city[k])  # swap
+        (newcity[k],newcity[l]) = (newcity[l],newcity[k])  # swap
+    return newcity
     
 def transpt(city, n):
     nct = len(city)
@@ -105,8 +108,6 @@ for t in xrange(1, TT+1):
     
     T = Tstart # temperature
 
-    # Plot(city, R, dist)
-    
     for t in range(maxTsteps):  # Over temperature
 
         accepted = 0
@@ -134,7 +135,9 @@ for t in xrange(1, TT+1):
                 if de<0 or exp(-de/T)>rand(): # Metropolis
                     accepted += 1
                     dist += de
-                    reverse(city, n)
+                    trial_city = reverse(city, n)
+                    if NPTSPviable(trial_city, c):
+                        city = trial_city
             else:
                 # Here we transpose a segment
                 nc = (n[1]+1+ int(rand()*(nn-1)))%nct  # Another point outside n[0],n[1] segment. See picture in lecture nodes!
@@ -148,7 +151,9 @@ for t in xrange(1, TT+1):
                 if de<0 or exp(-de/T)>rand(): # Metropolis
                     accepted += 1
                     dist += de
-                    city = transpt(city, n)
+                    trial_city = transpt(city, n)
+                    if NPTSPviable(trial_city, c):
+                        city = trial_city
                     
             if accepted > maxAccepted: break
 
@@ -157,9 +162,6 @@ for t in xrange(1, TT+1):
         if accepted == 0: break  # If the path does not want to change any more, we can stop
         
     ################################################################################################################################################################
-
-
-
 
     assign = [0] * N
     for i in xrange(N):
