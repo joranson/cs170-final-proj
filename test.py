@@ -2,31 +2,12 @@
 
 """ Traveling salesman problem solved using Simulated Annealing.
 """
-from scipy import *
-from pylab import *
-from matplotlib.pyplot import *
 
-class Graph:
-    def __init__(self, matrix, size, color):
-        self.matrix = matrix
-        self.size = size
-        self.color = color
-
-    def distance(self, a, b):
-        return self.matrix[a][b]
-
-    def total(self):
-        dist = 0
-        for i in xrange(self.size - 1):
-            dist += self.distance(i, i+1):
-        dist += self.distance(self.size -1, 0)
-        return dist
-
-def NPTSPviable(graph, path):
+def NPTSPviable(path, c):
     repeat = 0
     last = None
     for i in path:
-        this = graph.color[i]
+        this = c[i]
         if this is last:
             repeat += repeat
             if repeat > 3:
@@ -36,12 +17,12 @@ def NPTSPviable(graph, path):
             repeat = 1
     return True
 
-def NPTSPviablePath(graph):
+def NPTSPviablePath(c):
     visited = [0]
-    notvisited = range(graph.size)
-    color = graph.color[1:]
-    this = graph.color[0]
-    for _ in range(graph.size):
+    notvisited = range(len(c))
+    color = c[1:]
+    this = c[0]
+    for _ in range(len(c)):
         if this is 'R':
             i = color.find('B')
             this = 'B'
@@ -52,6 +33,7 @@ def NPTSPviablePath(graph):
         notvisited = notvisited[0:i] + notvisited[i+1:]
         color = color[0:i] + color[i+1:]
     return visited
+
 
 def Distance(i1, i2, d):
     return d[i1][i2]
@@ -112,7 +94,7 @@ for t in xrange(1, TT+1):
     Preverse = 0.5      # How often to choose reverse/transpose trial move
 
     # The index table -- the order the cities are visited. ##### has to call the function which returns a valid order first (without violating color restriction)
-    city = balabala
+    city = NPTSPviablePath(c)
 
     # Distance of the travel at the beginning
     dist = TotalDistance(city, d)
