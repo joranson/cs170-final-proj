@@ -1,7 +1,7 @@
-T = 1 # number of test cases
+T = 495 # number of test cases
 fout = open ("answer.out", "w")
 for t in xrange(1, T+1):
-    fin = open(str(t) + ".in", "r")
+    fin = open("instances/"+str(t) + ".in", "r")
     N = int(fin.readline())
     d = [[] for i in range(N)]
     for i in xrange(N):

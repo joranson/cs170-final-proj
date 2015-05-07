@@ -4,6 +4,7 @@
 """
 from scipy import *
 from pylab import *
+from matplotlib.pyplot import *
 
 def Distance(R1, R2):
     return sqrt((R1[0]-R2[0])**2+(R1[1]-R2[1])**2)
@@ -17,7 +18,7 @@ def TotalDistance(city, R):
     
 def reverse(city, n):
     nct = len(city)
-    nn = (1+ ((n[1]-n[0]) % nct))/2 # half the lenght of the segment to be reversed
+    nn = (1+ ((n[1]-n[0]) % nct))/2 # half the length of the segment to be reversed
     # the segment is reversed in the following way n[0]<->n[1], n[0]+1<->n[1]-1, n[0]+2<->n[1]-2,...
     # Start at the ends of the segment and swap pairs of cities, moving towards the center.
     for j in range(nn):
