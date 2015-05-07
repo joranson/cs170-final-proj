@@ -49,6 +49,37 @@ def Plot(city, R, dist):
     title('Total distance='+str(dist))
     plot(Pt[:,0], Pt[:,1], '-o')
     show()
+    
+def NPTSPviable(graph, path):
+    repeat = 0
+    last = None
+    for i in path:
+        this = graph.color[i]
+        if this is last:
+            repeat += repeat
+            if repeat > 3:
+                return False
+        else:
+            last = this
+            repeat = 1
+    return True
+
+def NPTSPviablePath(graph):
+    visited = [0]
+    notvisited = range(graph.size)
+    color = graph.color[1:]
+    this = graph.color[0]
+    for _ in range(graph.size):
+        if this is 'R':
+            i = color.find('B')
+            this = 'B'
+        else:
+            i = color.find('R')
+            this = 'B'           
+        visited.append(notvisited[i])
+        notvisited = notvisited[0:i] + notvisited[i+1:]
+        color = color[0:i] + color[i+1:]
+    return visited
 
 if __name__=='__main__':
 
