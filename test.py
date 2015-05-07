@@ -6,6 +6,53 @@ from scipy import *
 from pylab import *
 from matplotlib.pyplot import *
 
+class Graph:
+    def __init__(self, matrix, size, color):
+        self.matrix = matrix
+        self.size = size
+        self.color = color
+
+    def distance(self, a, b):
+        return self.matrix[a][b]
+
+    def total(self):
+        dist = 0
+        for i in xrange(self.size - 1):
+            dist += self.distance(i, i+1):
+        dist += self.distance(self.size -1, 0)
+        return dist
+
+def NPTSPviable(graph, path):
+    repeat = 0
+    last = None
+    for i in path:
+        this = graph.color[i]
+        if this is last:
+            repeat += repeat
+            if repeat > 3:
+                return False
+        else:
+            last = this
+            repeat = 1
+    return True
+
+def NPTSPviablePath(graph):
+    visited = [0]
+    notvisited = range(graph.size)
+    color = graph.color[1:]
+    this = graph.color[0]
+    for _ in range(graph.size):
+        if this is 'R':
+            i = color.find('B')
+            this = 'B'
+        else:
+            i = color.find('R')
+            this = 'B'           
+        visited.append(notvisited[i])
+        notvisited = notvisited[0:i] + notvisited[i+1:]
+        color = color[0:i] + color[i+1:]
+    return visited
+
 def Distance(i1, i2, d):
     return d[i1][i2]
 
