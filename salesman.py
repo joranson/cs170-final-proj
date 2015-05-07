@@ -6,15 +6,21 @@ from scipy import *
 from pylab import *
 from matplotlib.pyplot import *
 
-def Distance(R1, R2):
-    return sqrt((R1[0]-R2[0])**2+(R1[1]-R2[1])**2)
+class Graph:
+    def __init__(self, matrix, size, color):
+        self.matrix = matrix
+        self.size = size
+        self.color = color
 
-def TotalDistance(city, R):
-    dist=0
-    for i in range(len(city)-1):
-        dist += Distance(R[city[i]],R[city[i+1]])
-    dist += Distance(R[city[-1]],R[city[0]])
-    return dist
+    def distance(self, a, b):
+        return self.matrix[a][b]
+
+    def total(self):
+        dist = 0
+        for i in xrange(self.size - 1):
+            dist += self.distance(i, i+1):
+        dist += self.distance(self.size -1, 0)
+        return dist
     
 def reverse(city, n):
     nct = len(city)
