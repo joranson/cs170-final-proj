@@ -96,10 +96,10 @@ def longestEdge(path, d):
             maxDist = d[path[n1]][path[n2]]
             nn1 = n1
             nn2 = n2
-    if n2 == 0:
+    if nn2 == 0:
         return path
     else:
-        return path[n2:]+path[:n2]
+        return path[nn2:]+path[:nn2]
 
 
 TT = 1 # number of test cases
@@ -131,10 +131,11 @@ minPath = []
 for kk in range(10):
     print kk, "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
     path = longestEdge(NPTSPviablePath(c),d)
-    # print path
+    # print path, TotalDistance(NPTSPviablePath(c),d)
 
     # Distance of the travel at the beginning
     dist = TotalDistance(path, d)
+    print dist
 
     # Stores points of a move
     n = [0,0,0,0,0,0]
