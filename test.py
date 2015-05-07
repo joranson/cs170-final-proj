@@ -6,10 +6,10 @@ from scipy import *
 from pylab import *
 from matplotlib.pyplot import *
 
-def Distance(R1, R2, d):
-    return d[R1][R2]
+def Distance(i1, i2, d):
+    return d[i1][i2]
 
-def TotalDistance(city, R, d):
+def TotalDistance(city, d):
     dist=0
     for i in range(len(city)-1):
         dist += Distance(i,i+1,d)
@@ -40,21 +40,11 @@ def transpt(city, n):
     for j in range( (n[4]-n[3])%nct + 1):
         newcity.append(city[ (j+n[3])%nct ])
     return newcity
-
-def Plot(city, R, dist):
-    # Plot
-    Pt = [R[city[i]] for i in range(len(city))]
-    Pt += [R[city[0]]]
-    Pt = array(Pt)
-    title('Total distance='+str(dist))
-    plot(Pt[:,0], Pt[:,1], '-o')
-    show()
     
 
-
-T = 495 # number of test cases
+TT = 495 # number of test cases
 fout = open ("answer.out", "w")
-for t in xrange(1, T+1):
+for t in xrange(1, TT+1):
     fin = open("instances/"+str(t) + ".in", "r")
     N = int(fin.readline())
     d = [[] for i in range(N)]
@@ -63,7 +53,6 @@ for t in xrange(1, T+1):
     c = fin.readline()
 
     # find an answer, and put into assign
-
 
     ################################################################################################################################################################
     ncity = N       # Number of cities to visit
@@ -75,24 +64,19 @@ for t in xrange(1, T+1):
 
     Preverse = 0.5      # How often to choose reverse/transpose trial move
 
-    # Choosing city coordinates
-    R=[]  # coordinates of cities are choosen randomly
-    for i in range(ncity):
-        R.append( [rand(),rand()] )
-    R = array(R)
+    # The index table -- the order the cities are visited. ##### has to call the function which returns a valid order first (without violating color restriction)
+    city = balabala
 
-    # The index table -- the order the cities are visited.
-    city = range(ncity)
     # Distance of the travel at the beginning
-    dist = TotalDistance(city, R)
+    dist = TotalDistance(city, d)
 
     # Stores points of a move
     n = zeros(6, dtype=int)
-    nct = len(R) # number of cities
+    nct = ncity # number of cities
     
     T = Tstart # temperature
 
-    Plot(city, R, dist)
+    # Plot(city, R, dist)
     
     for t in range(maxTsteps):  # Over temperature
 
@@ -116,7 +100,7 @@ for t in xrange(1, T+1):
             if Preverse > rand(): 
                 # Here we reverse a segment
                 # What would be the cost to reverse the path between city[n[0]]-city[n[1]]?
-                de = Distance(R[city[n[2]]],R[city[n[1]]]) + Distance(R[city[n[3]]],R[city[n[0]]]) - Distance(R[city[n[2]]],R[city[n[0]]]) - Distance(R[city[n[3]]],R[city[n[1]]])
+                de = Distance(n[2],n[1], d) + Distance(n[3],n[0],d) - Distance(n[2],n[0],d) - Distance(n[3],n[1],d)
                 
                 if de<0 or exp(-de/T)>rand(): # Metropolis
                     accepted += 1
@@ -129,8 +113,8 @@ for t in xrange(1, T+1):
                 n[5] = (nc+1) % nct
         
                 # Cost to transpose a segment
-                de = -Distance(R[city[n[1]]],R[city[n[3]]]) - Distance(R[city[n[0]]],R[city[n[2]]]) - Distance(R[city[n[4]]],R[city[n[5]]])
-                de += Distance(R[city[n[0]]],R[city[n[4]]]) + Distance(R[city[n[1]]],R[city[n[5]]]) + Distance(R[city[n[2]]],R[city[n[3]]])
+                de = -Distance(n[1],n[3],d) - Distance(n[0],n[2],d) - Distance(n[4],n[5],d)
+                de += Distance(n[0],n[4],d) + Distance(n[1],n[5],d) + Distance(n[2],n[3],d)
                 
                 if de<0 or exp(-de/T)>rand(): # Metropolis
                     accepted += 1
@@ -139,15 +123,10 @@ for t in xrange(1, T+1):
                     
             if accepted > maxAccepted: break
 
-        # Plot
-        Plot(city, R, dist)
-            
         print "T=%10.5f , distance= %10.5f , accepted steps= %d" %(T, dist, accepted)
         T *= fCool             # The system is cooled down
         if accepted == 0: break  # If the path does not want to change any more, we can stop
-
         
-    Plot(city, R, dist)
     ################################################################################################################################################################
 
 
