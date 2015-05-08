@@ -106,7 +106,7 @@ TT = 1 # number of test cases
 fout = open ("answer.out", "w")
 # for t in xrange(1, TT+1):
     # fin = open("instances/"+str(t) + ".in", "r")            ## modified
-fin = open("instances/"+"1" + ".in", "r")  
+fin = open("instances/"+"2" + ".in", "r")  
 N = int(fin.readline())
 d = [[] for i in range(N)]
 for i in xrange(N):
@@ -119,7 +119,7 @@ c = fin.readline()
 ncity = N       # Number of cities to visit
 maxTsteps = 200    # Temperature is lowered not more than maxTsteps
 Tstart = 0.2       # Starting temperature - has to be high enough
-fCool = 0.999        # Factor to multiply temperature at each cooling step
+fCool = 0.995       # Factor to multiply temperature at each cooling step
 maxSteps = 200*ncity     # Number of steps at constant temperature
 maxAccepted = 10*ncity   # Number of accepted steps at constant temperature
 
@@ -167,15 +167,22 @@ for kk in range(10):
             if Preverse > rand(): 
                 # Here we reverse a segment
                 # What would be the cost to reverse the path between city[n[0]]-city[n[1]]?
-                de = Distance(path[n[2]],path[n[1]], d) + Distance(path[n[3]],path[n[0]],d) - Distance(path[n[2]],path[n[0]],d) - Distance(path[n[3]],path[n[1]],d)
+                #try reversing it
+                n[4]=0
+                n[5]=0
+                trial_path=reverse(path,n)
+                alpha=TotalDistance(trial_path,d)
+                beta=TotalDistance(path,d)
+                de=alpha-beta
+                #de = Distance(path[n[2]],path[n[1]], d) + Distance(path[n[3]],path[n[0]],d) - Distance(path[n[2]],path[n[0]],d) - Distance(path[n      [3]],path[n[1]],d)
                 # print "reverse "+str(i)
                 n[4]=0
                 n[5]=0
                 if de<0 or exp(-de/T)>rand(): # Metropolis
-                    trial_path = reverse(path, n)
+                    #trial_path = reverse(path, n)
                     if NPTSPviable(trial_path, c):
                         accepted += 1
-                        dist += de
+                        dist = alpha #was dist += de before
                         path = trial_path
                     # print "n is ", n
                     # print "de = ", de, "dist = ", dist
@@ -186,15 +193,19 @@ for kk in range(10):
                 n[5] = (nc+1) % nct
         
                 # Cost to transpose a segment
-                de = -Distance(path[n[1]],path[n[3]],d) - Distance(path[n[0]],path[n[2]],d) - Distance(path[n[4]],path[n[5]],d)
-                de += Distance(path[n[0]],path[n[4]],d) + Distance(path[n[1]],path[n[5]],d) + Distance(path[n[2]],path[n[3]],d)
+                trial_path=transpt(path,n)
+                alpha=TotalDistance(trial_path,d)
+                beta=TotalDistance(path,d)
+                de=alpha-beta
+                #de = -Distance(path[n[1]],path[n[3]],d) - Distance(path[n[0]],path[n[2]],d) - Distance(path[n[4]],path[n[5]],d)
+                #de += Distance(path[n[0]],path[n[4]],d) + Distance(path[n[1]],path[n[5]],d) + Distance(path[n[2]],path[n[3]],d)
                 # print "transpose " + str(i)
 
                 if de<0 or exp(-de/T)>rand(): # Metropolis
-                    trial_path = transpt(path, n)
+                    #trial_path = transpt(path, n)
                     if NPTSPviable(trial_path, c):
                         accepted += 1
-                        dist += de
+                        dist = alpha #was += de
                         path = trial_path
             #         print "n is ", n
             #         print "de = ", de, "dist = ", dist
@@ -206,7 +217,8 @@ for kk in range(10):
         if accepted == 0: break  # If the path does not want to change any more, we can stop
     if dist<minDist:
         minPath = path
-        minDist = dist
+    minDist=dist        
+    #minDist = dist
     
 ################################################################################################################################################################
 
