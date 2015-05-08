@@ -111,9 +111,7 @@ for t in xrange(1, TT+1):
     d = [[] for i in range(N)]
     for i in xrange(N):
         d[i] = [int(x) for x in fin.readline().split()]
-    c = fin.readline()
-    if c[-1]=='\n':
-        c=c[:-1]
+    c = fin.readline()[:N]
 
     # find an answer, and put into assign
 
