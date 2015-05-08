@@ -235,7 +235,7 @@ for t in xrange(161, TT+1):
         
     ################################################################################################################################################################
 
-    assign = minPath
+    assign = [i+1 for i in minPath]
     print minDist, assign
 
     fout.write("%s\n" % " ".join(map(str, assign)))
